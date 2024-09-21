@@ -1,21 +1,46 @@
 'use client';
 
 import { useState } from 'react';
-import { getWeatherByCity, getForecastByCity } from '../lib/weatherAPI';
+import { getWeatherByCity, getForecastByCity, fetchCities } from '../lib/weatherAPI';
 import { useWeatherStore } from '../store/weatherStore';
 import Link from 'next/link';
 import styles from '../styles/searchWeather.module.scss'; 
 import { WeatherData } from '../types/weather'; 
 import { ForecastData } from '../types/forecast';
 import withLoader from './withLoader'; 
+import { CitySuggestion } from '../types/city'; // Импортируем тип для города
 
 const SearchWeather = () => {
   const [city, setCity] = useState<string>(''); 
+  const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]); // Используем тип CitySuggestion
   const [weather, setWeather] = useState<WeatherData | null>(null); 
   const [loading, setLoading] = useState<boolean>(false); 
   const [error, setError] = useState<string>(''); 
 
   const { addFavorite, removeFavorite, favorites, setForecast, forecast } = useWeatherStore(); 
+
+  // Функция для обновления предложений городов
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setCity(input);
+
+    if (input.length >= 3) { // Запрос срабатывает только если введено более 2 символов
+      try {
+        const fetchedCities = await fetchCities(input);
+        setSuggestions(fetchedCities);
+      } catch (error) {
+        console.error('Error fetching cities:', error);
+      }
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  // Выбор города из списка предложений
+  const handleCityClick = (selectedCity: CitySuggestion) => {
+    setCity(`${selectedCity.name}, ${selectedCity.country}`);
+    setSuggestions([]);
+  };
 
   const handleSearch = async () => {
     setLoading(true);
@@ -41,13 +66,32 @@ const SearchWeather = () => {
           type="text"
           className="form-control"
           value={city}
-          onChange={(e) => setCity(e.target.value)}
+          onChange={handleInputChange}
           placeholder="Enter city name"
         />
         <button className="btn btn-primary" onClick={handleSearch} disabled={loading}>
           {loading ? 'Loading...' : 'Search'}
         </button>
       </div>
+
+      {/* Подсказка для пользователя */}
+      <p className="text-muted">Please enter the city name in English. The first letter should be capitalized.</p>
+
+      {/* Выпадающий список с предложениями городов */}
+      {suggestions.length > 0 && (
+        <ul className="list-group mb-3">
+          {suggestions.map((suggestion) => (
+            <li
+              key={`${suggestion.lat}-${suggestion.lon}`}
+              className="list-group-item list-group-item-action"
+              onClick={() => handleCityClick(suggestion)}
+              style={{ cursor: 'pointer' }}
+            >
+              {suggestion.name}, {suggestion.country}
+            </li>
+          ))}
+        </ul>
+      )}
 
       {error && <p className="text-danger">{error}</p>}
 
