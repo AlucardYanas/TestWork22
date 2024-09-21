@@ -1,17 +1,18 @@
 'use client';
 
+import React from 'react';
 import { useWeatherStore } from '../store/weatherStore';
-import styles from '../styles/favorites.module.scss'; 
+import styles from '../styles/favorites.module.scss';
 
-const Favorites = () => {
-  const { favorites, removeFavorite } = useWeatherStore();
+const Favorites = (): React.ReactElement => {
+  const { favorites, removeFavorite } = useWeatherStore(); 
 
   return (
     <div className="container mt-4">
       <h2 className="mb-4">Favorite Cities</h2>
       {favorites.length > 0 ? (
         <ul className={styles.favoriteList}>
-          {favorites.map((city) => (
+          {favorites.map((city: string) => ( 
             <li key={city}>
               <span>{city}</span>
               <button

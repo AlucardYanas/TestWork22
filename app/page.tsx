@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import SearchWeather from './components/SearchWeather';
-import styles from './styles/page.module.scss'; // Подключаем SCSS-модуль
+import styles from './styles/page.module.scss'; 
 
 const HomePage = () => {
   return (

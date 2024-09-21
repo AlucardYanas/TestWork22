@@ -2,21 +2,22 @@
 
 import { useState, useEffect } from 'react';
 import { getForecastByCity } from '../lib/weatherAPI';
-import styles from '../styles/forecast.module.scss'; // Подключаем SCSS-модуль
+import styles from '../styles/forecast.module.scss'; 
+import type { ForecastData } from '../types/forecast'; 
 
-const Forecast = ({ city }: { city: string }) => {
-  const [forecast, setForecast] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+const Forecast = ({ city }: { city: string }): React.ReactElement => {
+  const [forecast, setForecast] = useState<ForecastData | null>(null); 
+  const [loading, setLoading] = useState<boolean>(false); 
+  const [error, setError] = useState<string>(''); 
 
   useEffect(() => {
     const fetchForecast = async () => {
       setLoading(true);
       setError('');
       try {
-        const data = await getForecastByCity(city);
-        setForecast(data);
-      } catch (err) {
+        const data: ForecastData = await getForecastByCity(city); 
+        setForecast(data); 
+      } catch {
         setError('Forecast not found');
       } finally {
         setLoading(false);

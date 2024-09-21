@@ -2,7 +2,7 @@
 
 import Favorites from '../components/Favorites';
 
-const FavoritesPage = () => {
+const FavoritesPage = (): React.ReactElement => {
   return (
     <div>
       <Favorites />

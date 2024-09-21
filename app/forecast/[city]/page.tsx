@@ -1,6 +1,6 @@
 import Forecast from '../../components/Forecast';
 
-const ForecastPage = ({ params }: { params: { city: string } }) => {
+const ForecastPage = ({ params }: { params: { city: string } }): React.ReactElement => {
   const { city } = params;  
 
   return (

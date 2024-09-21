@@ -1,28 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { getWeatherByCity, getForecastByCity } from '../lib/weatherAPI';
 import { useWeatherStore } from '../store/weatherStore';
 import Link from 'next/link';
 import styles from '../styles/searchWeather.module.scss'; 
+import { WeatherData } from '../types/weather'; 
+import { ForecastData } from '../types/forecast'; 
 
-const SearchWeather = () => {
-  const [city, setCity] = useState('');
-  const [weather, setWeather] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  
+const SearchWeather = (): React.ReactElement => {
+  const [city, setCity] = useState<string>(''); 
+  const [weather, setWeather] = useState<WeatherData | null>(null); 
+  const [loading, setLoading] = useState<boolean>(false); 
+  const [error, setError] = useState<string>(''); 
+
   const { addFavorite, removeFavorite, favorites, setForecast } = useWeatherStore(); 
 
   const handleSearch = async () => {
     setLoading(true);
     setError('');
     try {
-      const weatherData = await getWeatherByCity(city);  
-      const forecastData = await getForecastByCity(city); 
+      const weatherData: WeatherData = await getWeatherByCity(city);  
+      const forecastData: ForecastData = await getForecastByCity(city); 
       setWeather(weatherData); 
       setForecast(forecastData, city);  
-    } catch (err) {
+    } catch  {
       setError('City not found');
     } finally {
       setLoading(false);

@@ -1,13 +1,14 @@
 import {create} from 'zustand';
 import { persist } from 'zustand/middleware';
+import type {ForecastData} from '../types/forecast';
 
 interface WeatherState {
   favorites: string[];
-  forecast: string| null;
+  forecast: ForecastData | null;
   city: string | null;
   addFavorite: (city: string) => void;
   removeFavorite: (city: string) => void;
-  setForecast: (forecast: string, city: string) => void;
+  setForecast: (forecast: ForecastData, city: string) => void; // Здесь исправляем тип на ForecastData
   clearForecast: () => void;
 }
 
