@@ -9,6 +9,7 @@ import { WeatherData } from '../types/weather';
 import { ForecastData } from '../types/forecast';
 
 import { CitySuggestion } from '../types/city'; // Импортируем тип для города
+import withLoader from './withLoader';
 
 const SearchWeather = () => {
   const [city, setCity] = useState<string>(''); 
@@ -74,10 +75,10 @@ const SearchWeather = () => {
         </button>
       </div>
 
-      {/* Подсказка для пользователя */}
+ 
       <p className="text-muted">Please enter the city name in English. The first letter should be capitalized.</p>
 
-      {/* Выпадающий список с предложениями городов */}
+      
       {suggestions.length > 0 && (
         <ul className="list-group mb-3">
           {suggestions.map((suggestion) => (
@@ -131,4 +132,4 @@ const SearchWeather = () => {
   );
 };
 
-export default SearchWeather;
+export default withLoader(SearchWeather);
