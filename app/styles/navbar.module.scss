@@ -23,5 +23,10 @@
       font-weight: bold;
       color: #007bff;
     }
+
+    .disabled {
+      color: #ccc;
+      pointer-events: none; /* Запрещает кликать по ссылке */
+    }
   }
 }

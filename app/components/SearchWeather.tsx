@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { getWeatherByCity, getForecastByCity } from '../lib/weatherAPI';
 import { useWeatherStore } from '../store/weatherStore';
 import Link from 'next/link';
@@ -8,13 +8,13 @@ import styles from '../styles/searchWeather.module.scss';
 import { WeatherData } from '../types/weather'; 
 import { ForecastData } from '../types/forecast'; 
 
-const SearchWeather = (): React.ReactElement => {
+const SearchWeather = () => {
   const [city, setCity] = useState<string>(''); 
   const [weather, setWeather] = useState<WeatherData | null>(null); 
   const [loading, setLoading] = useState<boolean>(false); 
   const [error, setError] = useState<string>(''); 
 
-  const { addFavorite, removeFavorite, favorites, setForecast } = useWeatherStore(); 
+  const { addFavorite, removeFavorite, favorites, setForecast, forecast } = useWeatherStore(); // Достаем forecast из глобального состояния
 
   const handleSearch = async () => {
     setLoading(true);
@@ -23,8 +23,8 @@ const SearchWeather = (): React.ReactElement => {
       const weatherData: WeatherData = await getWeatherByCity(city);  
       const forecastData: ForecastData = await getForecastByCity(city); 
       setWeather(weatherData); 
-      setForecast(forecastData, city);  
-    } catch  {
+      setForecast(forecastData, city);  // Сохраняем данные прогноза в глобальном состоянии
+    } catch {
       setError('City not found');
     } finally {
       setLoading(false);
@@ -66,9 +66,17 @@ const SearchWeather = (): React.ReactElement => {
                 Add to Favorites
               </button>
             )}
-            <Link href={`/forecast/${weather.name}`}>
-              <button className="btn btn-primary">View Forecast</button>
-            </Link>
+
+            {/* Делаем ссылку на прогноз активной только если прогноз загружен */}
+            {forecast && forecast.city.name === weather.name ? (
+              <Link href={`/forecast/${weather.name}`}>
+                <button className="btn btn-primary">View Forecast</button>
+              </Link>
+            ) : (
+              <button className="btn btn-secondary" disabled>
+                View Forecast
+              </button>
+            )}
           </div>
         </div>
       )}

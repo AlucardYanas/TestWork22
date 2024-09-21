@@ -3,20 +3,23 @@
 import { useState, useEffect } from 'react';
 import { getForecastByCity } from '../lib/weatherAPI';
 import styles from '../styles/forecast.module.scss'; 
-import type { ForecastData } from '../types/forecast'; 
+import type { ForecastData } from '../types/forecast';
+import { useWeatherStore } from '../store/weatherStore'; // Используем Zustand для хранения данных
 
-const Forecast = ({ city }: { city: string }): React.ReactElement => {
-  const [forecast, setForecast] = useState<ForecastData | null>(null); 
+const Forecast = ({ city }: { city: string }) => {
   const [loading, setLoading] = useState<boolean>(false); 
   const [error, setError] = useState<string>(''); 
+  const { forecast, setForecast } = useWeatherStore(); // Достаем прогноз и функцию сохранения из глобального состояния
 
   useEffect(() => {
     const fetchForecast = async () => {
       setLoading(true);
       setError('');
       try {
-        const data: ForecastData = await getForecastByCity(city); 
-        setForecast(data); 
+        if (!forecast || forecast.city.name !== city) {
+          const data: ForecastData = await getForecastByCity(city); // Загружаем данные, если нет сохраненного прогноза
+          setForecast(data, city);  // Сохраняем данные прогноза в Zustand
+        }
       } catch {
         setError('Forecast not found');
       } finally {
@@ -24,7 +27,7 @@ const Forecast = ({ city }: { city: string }): React.ReactElement => {
       }
     };
     fetchForecast();
-  }, [city]);
+  }, [city, forecast, setForecast]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;

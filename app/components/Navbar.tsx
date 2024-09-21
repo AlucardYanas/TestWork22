@@ -1,9 +1,11 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router'; 
+import { useRouter } from 'next/router';
+import { useWeatherStore } from '../store/weatherStore'; // Подключаем Zustand
 import styles from '../styles/Navbar.module.scss';
 
-const Navbar = (): React.ReactElement => {
+const Navbar = () => {
   const router = useRouter();
+  const { forecast } = useWeatherStore(); // Получаем прогноз из состояния
 
   return (
     <nav className={`navbar navbar-expand-lg navbar-light bg-light ${styles.navbar}`}>
@@ -29,11 +31,22 @@ const Navbar = (): React.ReactElement => {
                 Search Weather
               </Link>
             </li>
-            <li className={`nav-item ${router.pathname === '/forecast' ? 'active' : ''}`}>
-              <Link href="/forecast" className="nav-link">
-                Forecast
-              </Link>
-            </li>
+
+            {/* Проверяем, есть ли прогноз, и делаем ссылку активной только если прогноз загружен */}
+            {forecast ? (
+              <li className={`nav-item ${router.pathname === '/forecast' ? 'active' : ''}`}>
+                <Link href="/forecast" className="nav-link">
+                  Forecast
+                </Link>
+              </li>
+            ) : (
+              <li className="nav-item">
+                <span className="nav-link disabled" aria-disabled="true">
+                  Forecast (unavailable)
+                </span>
+              </li>
+            )}
+
             <li className={`nav-item ${router.pathname === '/favorites' ? 'active' : ''}`}>
               <Link href="/favorites" className="nav-link">
                 Favorites

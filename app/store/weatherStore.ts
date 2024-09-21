@@ -1,6 +1,8 @@
+'use client';
+
 import {create} from 'zustand';
 import { persist } from 'zustand/middleware';
-import type {ForecastData} from '../types/forecast';
+import { ForecastData } from '../types/forecast';
 
 interface WeatherState {
   favorites: string[];
@@ -8,7 +10,7 @@ interface WeatherState {
   city: string | null;
   addFavorite: (city: string) => void;
   removeFavorite: (city: string) => void;
-  setForecast: (forecast: ForecastData, city: string) => void; // Здесь исправляем тип на ForecastData
+  setForecast: (forecast: ForecastData, city: string) => void;
   clearForecast: () => void;
 }
 
@@ -38,7 +40,7 @@ export const useWeatherStore = create<WeatherState>()(
         })),
     }),
     {
-      name: 'weather-storage', 
+      name: 'weather-storage',
     }
   )
 );
