@@ -14,7 +14,7 @@ const SearchWeather = () => {
   const [loading, setLoading] = useState<boolean>(false); 
   const [error, setError] = useState<string>(''); 
 
-  const { addFavorite, removeFavorite, favorites, setForecast, forecast } = useWeatherStore(); // Достаем forecast из глобального состояния
+  const { addFavorite, removeFavorite, favorites, setForecast, forecast } = useWeatherStore(); 
 
   const handleSearch = async () => {
     setLoading(true);
@@ -23,7 +23,7 @@ const SearchWeather = () => {
       const weatherData: WeatherData = await getWeatherByCity(city);  
       const forecastData: ForecastData = await getForecastByCity(city); 
       setWeather(weatherData); 
-      setForecast(forecastData, city);  // Сохраняем данные прогноза в глобальном состоянии
+      setForecast(forecastData, city);  
     } catch {
       setError('City not found');
     } finally {
@@ -52,9 +52,12 @@ const SearchWeather = () => {
 
       {weather && (
         <div className="mt-4">
-          <h2>{weather.name}</h2>
-          <p>Temperature: {weather.main.temp}°C</p>
-          <p>Weather: {weather.weather[0].description}</p>
+          <h2>{weather.name}, {weather.sys.country}</h2>
+          <p><strong>Temperature:</strong> {weather.main.temp}°C</p>
+          <p><strong>Pressure:</strong> {weather.main.pressure} hPa</p>
+          <p><strong>Humidity:</strong> {weather.main.humidity}%</p>
+          <p><strong>Weather:</strong> {weather.weather[0].description}</p>
+          <p><strong>Wind Speed:</strong> {weather.wind.speed} m/s</p>
 
           <div className="d-flex gap-2 mt-3">
             {isFavorite(weather.name) ? (
@@ -67,7 +70,6 @@ const SearchWeather = () => {
               </button>
             )}
 
-            {/* Делаем ссылку на прогноз активной только если прогноз загружен */}
             {forecast && forecast.city.name === weather.name ? (
               <Link href={`/forecast/${weather.name}`}>
                 <button className="btn btn-primary">View Forecast</button>
