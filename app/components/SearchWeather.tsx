@@ -7,7 +7,7 @@ import Link from 'next/link';
 import styles from '../styles/searchWeather.module.scss'; 
 import { WeatherData } from '../types/weather'; 
 import { ForecastData } from '../types/forecast';
-import withLoader from './withLoader'; 
+
 import { CitySuggestion } from '../types/city'; // Импортируем тип для города
 
 const SearchWeather = () => {
@@ -131,4 +131,4 @@ const SearchWeather = () => {
   );
 };
 
-export default withLoader(SearchWeather);
+export default SearchWeather;
