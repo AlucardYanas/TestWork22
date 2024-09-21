@@ -6,7 +6,8 @@ import { useWeatherStore } from '../store/weatherStore';
 import Link from 'next/link';
 import styles from '../styles/searchWeather.module.scss'; 
 import { WeatherData } from '../types/weather'; 
-import { ForecastData } from '../types/forecast'; 
+import { ForecastData } from '../types/forecast';
+import withLoader from './withLoader'; 
 
 const SearchWeather = () => {
   const [city, setCity] = useState<string>(''); 
@@ -86,4 +87,4 @@ const SearchWeather = () => {
   );
 };
 
-export default SearchWeather;
+export default withLoader(SearchWeather);

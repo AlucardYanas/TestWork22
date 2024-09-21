@@ -29,7 +29,17 @@ const Forecast = ({ city }: { city: string }) => {
     fetchForecast();
   }, [city, forecast, setForecast]);
 
-  if (loading) return <p>Loading...</p>;
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '50px' }}>
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   if (error) return <p>{error}</p>;
 
   return (
